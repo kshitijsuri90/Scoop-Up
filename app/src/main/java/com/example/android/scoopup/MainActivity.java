@@ -25,7 +25,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<News>>{
 
     private static final String TAG = "MainActivity";
-    private static final String URL = "https://content.guardianapis.com/search?api-key=8fd73672-a55a-409b-8192-9ebad467ec7c";
+    private static final String API_KEY = "&api-key=8fd73672-a55a-409b-8192-9ebad467ec7c";
+    private static final String URL = "http://content.guardianapis.com/search?&show-tags=all&from-date=2018-08-20&order-by=newest&show-fields=all&page-size=200" + API_KEY;
     private static final int LOADER_ID = 1;
     private TextView emptyTextView;
     private ProgressBar progressBar;

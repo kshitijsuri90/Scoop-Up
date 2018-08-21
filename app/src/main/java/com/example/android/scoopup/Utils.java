@@ -103,6 +103,7 @@ public class Utils {
 
     public static ArrayList<News> extractNews(String json){
         ArrayList<News> news = new ArrayList<>();
+        String author = "";
         try {
             JSONObject main = new JSONObject(json);
             JSONObject response = main.getJSONObject("response");
@@ -110,9 +111,15 @@ public class Utils {
             for(int i =0;i<results.length();i++){
                 JSONObject news_object = results.getJSONObject(i);
                 String title = news_object.getString("webTitle");
-                String author = news_object.getString("sectionId");
+                String category = news_object.getString("sectionId");
                 String url = news_object.getString("webUrl");
-                news.add(new News(title,author,url));
+                String date = news_object.getString("webPublicationDate").substring(0,10);
+                JSONArray tags = news_object.getJSONArray("tags");
+                if(tags!=null){
+                    JSONObject authorProfile = (JSONObject) tags.get(0);
+                    author = authorProfile.optString("webTitle");
+                }
+                news.add(new News(title,category,url,author,date));
             }
 
         } catch (JSONException e) {
