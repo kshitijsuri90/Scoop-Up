@@ -2,37 +2,37 @@ package com.example.android.scoopup;
 
 public class News {
 
-    private String news;
-    private String category;
-    private String url;
-    private String author;
-    private String publishDate;
+    private String mTitle;
+    private String mCategory;
+    private String mDate;
+    private String mUrl;
+    private String mAuthor;
 
-    News(String news, String category, String url, String author, String publishDate) {
-        this.news = news;
-        this.category = category;
-        this.url = url;
-        this.author = author;
-        this.publishDate = publishDate;
+    public News(String mTitle, String mCategory, String mDate, String mUrl, String mAuthor) {
+        this.mTitle = mTitle;
+        this.mCategory = mCategory;
+        this.mDate = mDate;
+        this.mUrl = mUrl;
+        this.mAuthor = mAuthor;
     }
 
-    public String getNews() {
-        return news;
+    public String getmTitle() {
+        return mTitle;
     }
 
-    public String getCategory() {
-        return category;
+    public String getmCategory() {
+        return mCategory;
     }
 
-    public String getUrl() {
-        return url;
+    public String getmDate() {
+        return mDate;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getmUrl() {
+        return mUrl;
     }
 
-    public String getPublishDate() {
-        return publishDate;
+    public String getmAuthor() {
+        return mAuthor;
     }
 }

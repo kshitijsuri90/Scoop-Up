@@ -9,14 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class NewsListAdapter extends ArrayAdapter<News> {
-    public NewsListAdapter(@NonNull Context context, int resource, @NonNull List<News> objects) {
+    NewsListAdapter(@NonNull Context context, int resource, @NonNull List<News> objects) {
         super(context, resource, objects);
     }
 
@@ -26,29 +22,31 @@ public class NewsListAdapter extends ArrayAdapter<News> {
         if(view==null){
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_template,parent,false);
         }
+        View listView =  view;
         News current_news = getItem(position);
 
-        TextView news = view.findViewById(R.id.news);
+        TextView newsTitleTextView =  listView.findViewById(R.id.title_text_view);
         assert current_news != null;
-        news.setText(current_news.getNews());
+        String title = current_news.getmTitle();
+        newsTitleTextView.setText(title);
 
-        TextView category = view.findViewById(R.id.category);
-        category.setText(current_news.getCategory());
+        TextView newsCategorytextView =  listView.findViewById(R.id.category_text_view);
+        String category = current_news.getmCategory();
+        newsCategorytextView.setText(category);
 
-        TextView date = view.findViewById(R.id.date);
-        DateFormat input = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat output = new SimpleDateFormat("dd MMM yyyy");
+        TextView newsDatetextView =  listView.findViewById(R.id.date_text_view);
+        String date = current_news.getmDate();
+        newsDatetextView.setText(date);
 
-        try {
-            Date date_id = input.parse(current_news.getPublishDate());
-            date.setText(output.format(date_id));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            date.setText(null);
+        TextView newsAuthortextView =  listView.findViewById(R.id.author_text_view);
+        String author = current_news.getmAuthor();
+
+        //Check Author if empty show this message
+        if(author.equals("")){
+            author = getContext().getString(R.string.noauthor);
         }
 
-        TextView author = view.findViewById(R.id.author);
-        author.setText(current_news.getAuthor());
+        newsAuthortextView.setText(author);
         return view;
     }
 }

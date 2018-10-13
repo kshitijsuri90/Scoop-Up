@@ -1,5 +1,6 @@
 package com.example.android.scoopup;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -15,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -34,7 +36,7 @@ public class Utils {
             e.printStackTrace();
         }
 
-        ArrayList<News> news = extractNews(json);
+        ArrayList<News> news = (ArrayList<News>) extractNews(json);
         return news;
 
     }
@@ -72,7 +74,7 @@ public class Utils {
             }
         }
         catch (IOException e ){
-            Log.e(TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(TAG, "Problem retrieving the News JSON results.", e);
         }
         finally {
             if (urlConnection != null) {
@@ -101,32 +103,40 @@ public class Utils {
         return output.toString();
     }
 
-    public static ArrayList<News> extractNews(String json){
-        ArrayList<News> news = new ArrayList<>();
-        String author = "";
+    private static List<News> extractNews(String newsJSON) {
+        if (TextUtils.isEmpty(newsJSON)) {
+            return null;
+        }
+
+        List<News> newsList = new ArrayList<>();
+
         try {
-            JSONObject main = new JSONObject(json);
-            JSONObject response = main.getJSONObject("response");
-            JSONArray results = response.getJSONArray("results");
-            for(int i =0;i<results.length();i++){
-                JSONObject news_object = results.getJSONObject(i);
-                String title = news_object.getString("webTitle");
-                String category = news_object.getString("sectionId");
-                String url = news_object.getString("webUrl");
-                String date = news_object.getString("webPublicationDate").substring(0,10);
-                JSONArray tags = news_object.getJSONArray("tags");
-                if(tags!=null){
-                    JSONObject authorProfile = (JSONObject) tags.get(0);
-                    author = authorProfile.optString("webTitle");
+            JSONObject baseJsonResponse = new JSONObject(newsJSON);
+            JSONObject response = baseJsonResponse.getJSONObject("response");
+            JSONArray resultsArray = response.getJSONArray("results");
+
+            for (int i = 0; i < resultsArray.length(); i++) {
+
+                JSONObject currentResults = resultsArray.getJSONObject(i);
+
+                String Title = currentResults.getString("webTitle");
+                String category = currentResults.getString("sectionName");
+                String date = currentResults.getString("webPublicationDate");
+                String url = currentResults.getString("webUrl");
+                JSONArray tagsauthor = currentResults.getJSONArray("tags");
+                String author = "";
+                if (tagsauthor.length() != 0) {
+                    JSONObject currenttagsauthor = tagsauthor.getJSONObject(0);
+                    author = currenttagsauthor.getString("webTitle");
                 }
-                news.add(new News(title,category,url,author,date));
+                News news = new News(Title, category, date, url, author);
+                newsList.add(news);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            Log.d(TAG,"JSON Exception");
         }
-
-        return news;
+        return newsList;
     }
 }

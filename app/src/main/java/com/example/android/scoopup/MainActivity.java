@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.ProxyInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -24,27 +23,21 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<News>>{
 
     private static final String TAG = "MainActivity";
     private static final String API_KEY = "&api-key=8fd73672-a55a-409b-8192-9ebad467ec7c";
-    private static final String URL = "http://content.guardianapis.com/search?&show-tags=all";
-    private static final String QUERY_FROM_DATE = "&from-date=";
-    private static final String QUERY_ORDER_BY = "&order-by=";
-    private static final String QUERY_FIELDS = "&q" +
-            "=";
-    private static final String QUERY_PAGES = "&page-size=";
+    private static String REQUEST_URL = "http://content.guardianapis.com/search?";
+    private static final String QUERY_ORDER_BY = "order-by";
+    private static final String QUERY_FIELDS = "q";
+    private static final String QUERY_PAGES = "page-size";
     private static final int LOADER_ID = 1;
-    private static String strDate ="";
     private TextView emptyTextView;
     private ProgressBar progressBar;
+    private ArrayList<News> news = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +45,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         setContentView(R.layout.activity_main);
         emptyTextView = findViewById(R.id.fail_text);
         progressBar = findViewById(R.id.loading_spinner);
-        Date current_time  = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        //to convert Date to String, use format method of SimpleDateFormat class.
-        strDate = dateFormat.format(current_time);
-        strDate = strDate.substring(0,10);
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         assert connectivityManager != null;
@@ -81,27 +69,33 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     @NonNull
     @Override
     public android.content.Loader<List<News>> onCreateLoader(int i, @Nullable Bundle bundle) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
-        String category = sharedPrefs.getString(
+        String category = sharedPreferences.getString(
                 getString(R.string.settings_category_key),
                 getString(R.string.settings_category_default));
+        String orderBy = sharedPreferences.getString(getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default));
 
         // parse breaks apart the URI string that's passed into its parameter
-        Uri baseUri = Uri.parse(URL);
-
-        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+        Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        // Append query parameter and its value. For example, the `format=geojson`
-        uriBuilder.appendQueryParameter(QUERY_FROM_DATE, strDate);
-        uriBuilder.appendQueryParameter(QUERY_ORDER_BY, "newest");
-        uriBuilder.appendQueryParameter(QUERY_FIELDS, category);
-        uriBuilder.appendQueryParameter(QUERY_PAGES, "200");
+        uriBuilder.appendQueryParameter("api-key", "test");
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter(QUERY_PAGES, "20");
 
-        // Return the completed uri `http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=10&minmag=minMagnitude&orderby=time
-        return new NewsLoader(this, uriBuilder.toString()+ API_KEY);
+        assert category != null;
+        if (!category.equals(getString(R.string.settings_category_default))) {
+            uriBuilder.appendQueryParameter("q", category);
+            uriBuilder.appendQueryParameter(QUERY_ORDER_BY, "relevance");
+        }
+        else{
+            uriBuilder.appendQueryParameter(QUERY_ORDER_BY, orderBy);
+        }
+
+
+        return new NewsLoader(this, uriBuilder.toString());
 
     }
 
@@ -121,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     private void updateUi(final ArrayList<News> news){
         // Find a reference to the {@link ListView} in the layout
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView =  findViewById(R.id.list);
         assert listView != null;
         listView.setEmptyView(emptyTextView);
 
@@ -133,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = news.get(position).getUrl();
+                String url = news.get(position).getmUrl();
                 Intent browser_intent = new Intent(Intent.ACTION_VIEW);
                 browser_intent.setData(Uri.parse(url));
                 startActivity(browser_intent);
