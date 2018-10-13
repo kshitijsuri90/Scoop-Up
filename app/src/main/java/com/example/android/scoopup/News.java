@@ -41,4 +41,6 @@ public class News {
     public String getThumbnailUrl() {
         return thumbnailUrl;
     }
+
+
 }

@@ -14,6 +14,9 @@ import android.content.Loader;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +32,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<News>>{
 
     private static final String TAG = "MainActivity";
-    private static final String API_KEY = "&api-key=8fd73672-a55a-409b-8192-9ebad467ec7c";
     private static String REQUEST_URL = "http://content.guardianapis.com/search?";
     private static final String QUERY_ORDER_BY = "order-by";
     private static final String QUERY_FIELDS = "q";
@@ -118,24 +120,23 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     private void updateUi(final ArrayList<News> news){
         // Find a reference to the {@link ListView} in the layout
-        ListView listView =  findViewById(R.id.list);
-        assert listView != null;
-        listView.setEmptyView(emptyTextView);
+        RecyclerView recyclerView =  findViewById(R.id.list);
+        if(news.isEmpty()){
+            recyclerView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.GONE);
+        }
+        RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this,news);
+        recyclerView.setAdapter(adapter);
 
-        // Create a new {@link ArrayAdapter} of earthquakes
-        NewsListAdapter adapter = new NewsListAdapter(this,android.R.layout.simple_list_item_1,news);
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = news.get(position).getmUrl();
-                Intent browser_intent = new Intent(Intent.ACTION_VIEW);
-                browser_intent.setData(Uri.parse(url));
-                startActivity(browser_intent);
-            }
-        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 
