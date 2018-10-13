@@ -33,16 +33,18 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static String REQUEST_URL = "http://content.guardianapis.com/search?";
     private static final String QUERY_ORDER_BY = "order-by";
     private static final String QUERY_FIELDS = "q";
+    public static final String KEY_SHOW_FIELD = "show-fields";
+    public static final String KEY_ALL = "all";
     private static final String QUERY_PAGES = "page-size";
     private static final int LOADER_ID = 1;
     private TextView emptyTextView;
     private ProgressBar progressBar;
-    private ArrayList<News> news = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("The Scoop");
         emptyTextView = findViewById(R.id.fail_text);
         progressBar = findViewById(R.id.loading_spinner);
 
@@ -82,13 +84,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         uriBuilder.appendQueryParameter("api-key", "test");
+        uriBuilder.appendQueryParameter(KEY_SHOW_FIELD,KEY_ALL);
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter(QUERY_PAGES, "20");
 
         assert category != null;
         if (!category.equals(getString(R.string.settings_category_default))) {
-            uriBuilder.appendQueryParameter("q", category);
-            uriBuilder.appendQueryParameter(QUERY_ORDER_BY, "relevance");
+            uriBuilder.appendQueryParameter(QUERY_FIELDS, category);
+            uriBuilder.appendQueryParameter(QUERY_ORDER_BY, "newest");
         }
         else{
             uriBuilder.appendQueryParameter(QUERY_ORDER_BY, orderBy);

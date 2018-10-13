@@ -7,13 +7,15 @@ public class News {
     private String mDate;
     private String mUrl;
     private String mAuthor;
+    private String thumbnailUrl;
 
-    public News(String mTitle, String mCategory, String mDate, String mUrl, String mAuthor) {
+    public News(String mTitle, String mCategory, String mDate, String mUrl, String mAuthor, String thumbnailUrl) {
         this.mTitle = mTitle;
         this.mCategory = mCategory;
         this.mDate = mDate;
         this.mUrl = mUrl;
         this.mAuthor = mAuthor;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getmTitle() {
@@ -34,5 +36,9 @@ public class News {
 
     public String getmAuthor() {
         return mAuthor;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 }

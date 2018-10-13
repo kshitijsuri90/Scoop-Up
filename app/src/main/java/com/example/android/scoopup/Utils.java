@@ -1,7 +1,10 @@
 package com.example.android.scoopup;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,8 +18,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Utils {
 
@@ -118,18 +125,28 @@ public class Utils {
             for (int i = 0; i < resultsArray.length(); i++) {
 
                 JSONObject currentResults = resultsArray.getJSONObject(i);
+                String thumbnail ="";
+                String Title = currentResults.optString("webTitle");
+                String category = currentResults.optString("sectionName");
+                String date = currentResults.optString("webPublicationDate");
+                String url = currentResults.optString("webUrl");
+                try{
+                    JSONObject fields = currentResults.getJSONObject("fields");
+                    thumbnail = fields.getString("thumbnail");
 
-                String Title = currentResults.getString("webTitle");
-                String category = currentResults.getString("sectionName");
-                String date = currentResults.getString("webPublicationDate");
-                String url = currentResults.getString("webUrl");
+                }
+                catch (JSONException e){
+                    Log.d(TAG, "extractNews: Missing thumbnail");
+                    thumbnail = "http://cosmicshambles.com/wp-content/uploads/2016/12/the-guardian-logo-440x440.png";
+                }
+
                 JSONArray tagsauthor = currentResults.getJSONArray("tags");
                 String author = "";
                 if (tagsauthor.length() != 0) {
                     JSONObject currenttagsauthor = tagsauthor.getJSONObject(0);
                     author = currenttagsauthor.getString("webTitle");
                 }
-                News news = new News(Title, category, date, url, author);
+                News news = new News(Title, category, date, url, author,thumbnail);
                 newsList.add(news);
             }
 
@@ -138,5 +155,21 @@ public class Utils {
             Log.d(TAG,"JSON Exception");
         }
         return newsList;
+    }
+
+    public static String formatDate(String publishDate) {
+        String formattedDate = "";
+        //define input date format
+        SimpleDateFormat inputSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        //define output date format
+        SimpleDateFormat outputSdf = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+        try {
+            //parse and format the input date
+            Date date = inputSdf.parse(publishDate);
+            formattedDate = outputSdf.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formattedDate;
     }
 }

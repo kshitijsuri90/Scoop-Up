@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Scoop Up!</string>
     <string name="no_search_results">No search results found</string>
-    <string name="no_internet">No internet connection</string>
+    <string name="no_internet">Uh-Oh! Your network is unavailable. Check your data or wifi connection.</string>
+    <string name="no_data">No results found. Please update your search and try again.</string>
+    <string name="no_desc_available">No description available</string>
 
 
     <string name="settings_menu_item">Settings</string>

@@ -1,79 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="15sp"
-        tools:text="Title" />
-
-    <LinearLayout
-        style="@style/newsdetailsectionstyle"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/dimens_100dp"
+            android:layout_height="@dimen/dimens_100dp"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:layout_marginEnd="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:contentDescription="@string/no_desc_available"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
 
         <TextView
-            style="@style/newsdetailstextstyle"
-            android:text="Written by:" />
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimens_8dp"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:layout_marginStart="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/black"
+            android:typeface="sans"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="News Title" />
 
         <TextView
-            android:id="@+id/author_text_view"
-            style="@style/newsdetailstextstyle"
-            android:text="Wriitin by"
-            android:textColor="@color/colorPrimary"
-            tools:text="Author" />
+            android:id="@+id/section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginStart="@dimen/dimens_8dp"
+            android:fontFamily="sans-serif-condensed"
+            android:typeface="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Section" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/publishDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:layout_marginEnd="@dimen/dimens_8dp"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginRight="@dimen/dimens_8dp"
+            android:layout_marginStart="@dimen/dimens_8dp"
+            android:fontFamily="sans-serif-condensed"
+            android:typeface="serif"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/section"
+            tools:text="PublishDate" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimens_8dp"
+            android:layout_marginStart="@dimen/dimens_8dp"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@android:color/black"
+            android:typeface="sans"
+            app:layout_constraintBottom_toTopOf="@+id/publishDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintVertical_bias="1.0"
+            tools:text="Author Name" />
+    </android.support.constraint.ConstraintLayout>
 
-        <LinearLayout
-            style="@style/newsdetailsectionstyle"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/category_text_view"
-                style="@style/newsdetailstextstyle"
-                tools:text="Category" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/darker_gray" />
-
-        <LinearLayout
-            style="@style/newsdetailsectionstyle"
-            android:layout_weight="2"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/date_text_view"
-                style="@style/newsdetailstextstyle"
-                tools:text="Date" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/darker_gray" />
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

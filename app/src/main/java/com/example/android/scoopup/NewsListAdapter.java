@@ -7,13 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 public class NewsListAdapter extends ArrayAdapter<News> {
+
+    private Context context;
     NewsListAdapter(@NonNull Context context, int resource, @NonNull List<News> objects) {
         super(context, resource, objects);
+        this.context = context;
     }
 
     @NonNull
@@ -24,21 +32,29 @@ public class NewsListAdapter extends ArrayAdapter<News> {
         }
         View listView =  view;
         News current_news = getItem(position);
-
-        TextView newsTitleTextView =  listView.findViewById(R.id.title_text_view);
+        ImageView image = listView.findViewById(R.id.imageView);
         assert current_news != null;
+        String thumbnail= current_news.getThumbnailUrl();
+        if(thumbnail==null){
+            image.setImageResource(R.drawable.ic_launcher_background);
+        }
+        else {
+            Glide.with(context).load(thumbnail).into(image);
+        }
+
+        TextView newsTitleTextView =  listView.findViewById(R.id.title);
         String title = current_news.getmTitle();
         newsTitleTextView.setText(title);
 
-        TextView newsCategorytextView =  listView.findViewById(R.id.category_text_view);
+        TextView newsCategorytextView =  listView.findViewById(R.id.section);
         String category = current_news.getmCategory();
         newsCategorytextView.setText(category);
 
-        TextView newsDatetextView =  listView.findViewById(R.id.date_text_view);
-        String date = current_news.getmDate();
+        TextView newsDatetextView =  listView.findViewById(R.id.publishDate);
+        String date = Utils.formatDate(current_news.getmDate());
         newsDatetextView.setText(date);
 
-        TextView newsAuthortextView =  listView.findViewById(R.id.author_text_view);
+        TextView newsAuthortextView =  listView.findViewById(R.id.author);
         String author = current_news.getmAuthor();
 
         //Check Author if empty show this message
