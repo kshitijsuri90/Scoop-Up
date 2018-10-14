@@ -66,7 +66,7 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
         public void setData(News current, int position){
             this.title.setText(current.getmTitle());
-            this.date.setText(current.getmDate());
+            this.date.setText(Utils.formatDate(current.getmDate()));
             this.author.setText(current.getmAuthor());
             this.category.setText(current.getmCategory());
             Glide.with(context).load(current.getThumbnailUrl()).into(image);

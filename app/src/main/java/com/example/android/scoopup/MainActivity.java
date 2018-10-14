@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -130,13 +132,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             emptyTextView.setVisibility(View.GONE);
         }
         RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this,news);
-        recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_right);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.setAdapter(adapter);
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 
