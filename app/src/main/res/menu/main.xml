@@ -3,5 +3,6 @@
     tools:context="com.example.android.scoopup.MainActivity">
     <item
         android:id="@+id/action_settings"
+        android:icon="@drawable/ic_magnifier"
         android:title="@string/settings_menu_item" />
 </menu>

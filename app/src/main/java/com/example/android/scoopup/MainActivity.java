@@ -14,17 +14,15 @@ import android.content.Loader;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -40,15 +38,23 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     public static final String KEY_SHOW_FIELD = "show-fields";
     public static final String KEY_ALL = "all";
     private static final String QUERY_PAGES = "page-size";
+    private static String SECTION_QUERY  = "";
+    private static final String SECTION_NAME = "sectionName";
+    private static final String SECTION_ID = "sectionId";
     private static final int LOADER_ID = 1;
     private TextView emptyTextView;
     private ProgressBar progressBar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("The Scoop");
+        toolbar = findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        setTitle("");
+        SECTION_QUERY = getIntent().getStringExtra("section").trim();
         emptyTextView = findViewById(R.id.fail_text);
         progressBar = findViewById(R.id.loading_spinner);
 
@@ -98,7 +104,18 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             uriBuilder.appendQueryParameter(QUERY_ORDER_BY, "newest");
         }
         else{
-            uriBuilder.appendQueryParameter(QUERY_ORDER_BY, orderBy);
+            if(SECTION_QUERY.isEmpty()){
+                uriBuilder.appendQueryParameter(QUERY_ORDER_BY, orderBy);
+                uriBuilder.appendQueryParameter(QUERY_ORDER_BY,category);
+            }
+            else {
+                uriBuilder.appendQueryParameter(SECTION_NAME,SECTION_QUERY);
+                uriBuilder.appendQueryParameter(SECTION_ID,SECTION_QUERY);
+                uriBuilder.appendQueryParameter(QUERY_FIELDS, SECTION_QUERY);
+                uriBuilder.appendQueryParameter(QUERY_ORDER_BY, orderBy);
+
+            }
+
         }
 
 
@@ -106,14 +123,15 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     }
 
-
     @Override
-    public void onLoadFinished(Loader<List<News>> loader, List<News> news) {
+    public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
         Log.d(TAG, "onLoadFinished: executes load finished");
-        updateUi((ArrayList<News>) news);
+        updateUi((ArrayList<News>) data);
         emptyTextView.setText(R.string.no_search_results);
         progressBar.setVisibility(View.GONE);
+
     }
+
 
     @Override
     public void onLoaderReset(Loader<List<News>> loader) {

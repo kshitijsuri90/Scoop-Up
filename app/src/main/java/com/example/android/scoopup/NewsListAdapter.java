@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class NewsListAdapter extends ArrayAdapter<News> {
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         if(view==null){
-            view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_template,parent,false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.news_item_template,parent,false);
         }
         View listView =  view;
         News current_news = getItem(position);

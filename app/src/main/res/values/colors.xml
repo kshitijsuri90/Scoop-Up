@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="textColorEarthquakeDetails">#B4BAC0</color>
-    <!-- Text color for the primary location of the earthquake in the list item -->
     <color name="textColorEarthquakeLocation">#2B3D4D</color>
+    <color name="NewsPrimary">#57098f</color>
+    <color name="NewsPrimaryDark">#2b0348</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
 </resources>
