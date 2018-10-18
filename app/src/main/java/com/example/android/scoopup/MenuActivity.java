@@ -1,5 +1,6 @@
 package com.example.android.scoopup;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,4 +42,5 @@ public class MenuActivity extends AppCompatActivity {
         news.add(new Category("BUSINESS",R.drawable.yellowjpg));
         news.add(new Category("TRAVEL",R.drawable.light_yellow_news));
     }
+
 }

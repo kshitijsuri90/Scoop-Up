@@ -42,7 +42,7 @@ public class Category_Adapter extends RecyclerView.Adapter<Category_Adapter.MyVi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,MainActivity.class);
-                intent.putExtra("section",myViewHolder.title.getText().toString().trim().toLowerCase());
+                intent.putExtra("section",myViewHolder.title.getText().toString().trim());
                 context.startActivity(intent);
             }
         });

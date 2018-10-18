@@ -47,10 +47,9 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         News current_news = news.get(position);
         holder.setData(current_news,position);
         holder.cardView.setOnClickListener(v -> {
-
             String url = news.get(position).getmUrl();
-            Intent browser_intent = new Intent(Intent.ACTION_VIEW);
-            browser_intent.setData(Uri.parse(url));
+            Intent browser_intent = new Intent(context,WebActivity.class);
+            browser_intent.putExtra("url",current_news.getmUrl());
             context.startActivity(browser_intent);
         });
     }

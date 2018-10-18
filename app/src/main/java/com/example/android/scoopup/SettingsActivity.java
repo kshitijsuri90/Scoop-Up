@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity {
+    private String previous_activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
