@@ -17,13 +17,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,8 +32,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<News>> {
 
-    private static final String TAG = "MainActivity";
-    private static String REQUEST_URL = "http://content.guardianapis.com/search?";
     private static final String QUERY_ORDER_BY = "order-by";
     private static final String QUERY_FIELDS = "q";
     public static final String KEY_SHOW_FIELD = "show-fields";
@@ -47,17 +43,20 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final int LOADER_ID = 1;
     private TextView emptyTextView;
     private ProgressBar progressBar;
-    private Toolbar toolbar;
-    private TextView Title;
     private String title = "The Scoop";
-    private RecyclerView recyclerView;
+    private Boolean state = Constant.STATE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!state) {
+            setTheme(R.style.NewsCategory);
+        } else {
+            setTheme(R.style.AppThemeNight);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("The Scoop");
-        toolbar = findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         setTitle("");
         ImageView toolbar_bg = findViewById(R.id.toolbar_bg);
@@ -65,31 +64,30 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             SECTION_QUERY = getIntent().getStringExtra("section").trim();
             title = SECTION_QUERY;
             SECTION_QUERY = SECTION_QUERY.toLowerCase();
-            if(SECTION_QUERY.equals("highlights")){
-                toolbar_bg.setImageResource(R.drawable.blue_toolbar);
-                title = "Highlights";
+            switch (SECTION_QUERY) {
+                case "highlights":
+                    toolbar_bg.setImageResource(R.drawable.blue_toolbar);
+                    title = "Highlights";
+                    break;
+                case "politics":
+                    toolbar_bg.setImageResource(R.drawable.pink_news);
+                    title = "Politics";
+                    break;
+                case "business":
+                    toolbar_bg.setImageResource(R.drawable.yello_toolbar);
+                    title = "Business";
+                    break;
+                default:
+                    toolbar_bg.setImageResource(R.drawable.travel_toolbar);
+                    title = "Travel";
+                    break;
             }
-            else if(SECTION_QUERY.equals("politics")){
-                toolbar_bg.setImageResource(R.drawable.pink_news);
-                title = "Politics";
-            }
-            else if(SECTION_QUERY.equals("business")){
-                toolbar_bg.setImageResource(R.drawable.yello_toolbar);
-                title = "Business";
-            }
-            else{
-                toolbar_bg.setImageResource(R.drawable.travel_toolbar);
-                title = "Travel";
-            }
-        }
-        else{
-            toolbar_bg.setImageResource(R.drawable.crop_gradient);
         }
         toolbar_bg.setScaleType(ImageView.ScaleType.FIT_XY);
         emptyTextView = findViewById(R.id.fail_text);
         progressBar = findViewById(R.id.loading_spinner);
-        Title = findViewById(R.id.category_title);
-        Title.setText(title);
+        TextView title1 = findViewById(R.id.category_title);
+        title1.setText(title);
         ImageButton back = findViewById(R.id.back_pressed);
         back.setOnClickListener(v -> onBackPressed());
 
@@ -127,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         String category = sharedPreferences.getString(
                 getString(R.string.settings_category_key),
                 getString(R.string.settings_category_default));
-        String orderBy = sharedPreferences.getString(getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default));
 
         // parse breaks apart the URI string that's passed into its parameter
+        String REQUEST_URL = "http://content.guardianapis.com/search?";
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
@@ -139,15 +137,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter(QUERY_PAGES, "20");
 
         assert category != null;
-        if (!category.equals(getString(R.string.settings_category_default))) {
+        if (!category.equals(getString(R.string.settings_category_default)) || SECTION_QUERY.equals("highlights")) {
             uriBuilder.appendQueryParameter(QUERY_FIELDS, category);
             uriBuilder.appendQueryParameter(QUERY_ORDER_BY, getString(R.string.newest));
         } else {
 
-            if (SECTION_QUERY.isEmpty()) {
-                uriBuilder.appendQueryParameter(QUERY_ORDER_BY, getString(R.string.relevance));
-                uriBuilder.appendQueryParameter(QUERY_ORDER_BY, category);
-            } else if (SECTION_QUERY.equals("def")) {
+            if (SECTION_QUERY.equals("def")) {
                 uriBuilder.appendQueryParameter(SECTION_NAME, category);
                 uriBuilder.appendQueryParameter(SECTION_ID, category);
                 uriBuilder.appendQueryParameter(QUERY_FIELDS, category);
@@ -169,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
-        Log.d(TAG, "onLoadFinished: executes load finished");
         updateUi((ArrayList<News>) data);
         emptyTextView.setText(R.string.no_search_results);
         progressBar.setVisibility(View.GONE);
@@ -179,12 +173,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     @Override
     public void onLoaderReset(Loader<List<News>> loader) {
-        updateUi(new ArrayList<News>());
+        updateUi(new ArrayList<>());
     }
 
     private void updateUi(final ArrayList<News> news) {
         // Find a reference to the {@link ListView} in the layout
-        recyclerView = findViewById(R.id.list);
+        RecyclerView recyclerView = findViewById(R.id.list);
         if (news.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
@@ -206,7 +200,17 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        updateMenuTitle(menu);
         return true;
+    }
+
+    private void updateMenuTitle(android.view.Menu menu) {
+        MenuItem item = menu.getItem(1);
+        if (state) {
+            item.setTitle(getString(R.string.day_mode_title));
+        } else {
+            item.setTitle(getString(R.string.night_mode_title));
+        }
     }
 
     @Override
@@ -214,14 +218,23 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            settingsIntent.putExtra("state", state.toString());
             startActivity(settingsIntent);
             return true;
-        }
-        else if(id == R.id.action_night_mode_enable){
-
+        } else if (id == R.id.action_night_mode) {
+            if (!state) {
+                Constant.STATE = true;
+                item.setTitle(getString(R.string.night_mode_title));
+                this.recreate();
+            } else {
+                Constant.STATE = false;
+                item.setTitle(getString(R.string.day_mode_title));
+                this.recreate();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onBackPressed() {

@@ -49,5 +49,7 @@
     <string name="newest">newest</string>
     <string name="night_mode">Night Mode</string>
     <string name="night_mode_key" translatable="false">night_mode</string>
+    <string name="night_mode_title">Night Mode</string>
+    <string name="day_mode_title">Day Mode</string>
 
 </resources>

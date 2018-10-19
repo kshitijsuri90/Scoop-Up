@@ -19,7 +19,6 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:src="@drawable/yello_toolbar"
                 android:id="@+id/toolbar_bg"/>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/tool_bar"
