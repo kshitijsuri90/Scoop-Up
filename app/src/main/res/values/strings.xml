@@ -12,7 +12,7 @@
 
     <string name="settings_category">Category</string>
     <string name="settings_category_key" translatable="false">category_key</string>
-    <string name="settings_category_default" translatable="false">All</string>
+    <string name="settings_category_default" translatable="false">all</string>
 
     <string-array name="settings_order_by_labels">
         <item>@string/settings_order_by_newest_news_label</item>
@@ -60,6 +60,14 @@
     <string name="politics_section">politics</string>
     <string name="business_section">business</string>
     <string name="travel_section">travel</string>
+    <string name="the_guardian">The Guardian</string>
+    <string name="skip">SKIP</string>
+    <string name="next">NEXT</string>
+    <string name="s">START</string>
+    <string name="des1">News displayed by fetching data from the Guardian API</string>
+    <string name="reading_mode">Reading Mode</string>
+    <string name="des2">Inbuilt Night Mode for easy and strain-free reading experience</string>
+    <string name="des3">Inbuilt Search feature to get news in accordance to your preference</string>
 
 
 </resources>

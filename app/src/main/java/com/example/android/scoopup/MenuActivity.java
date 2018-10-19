@@ -33,8 +33,6 @@ public class MenuActivity extends AppCompatActivity {
         recyclerView.setLayoutAnimation(controller);
         recyclerView.setAdapter(adapter);
 
-
-
     }
     private void addData(List<Category> news) {
         news.add(new Category(getString(R.string.category1),R.drawable.blue_news));

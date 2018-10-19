@@ -42,6 +42,7 @@ public class Category_Adapter extends RecyclerView.Adapter<Category_Adapter.MyVi
         myViewHolder.parent.setOnClickListener(v -> {
             Intent intent = new Intent(context,MainActivity.class);
             intent.putExtra("section",myViewHolder.title.getText().toString().trim());
+            intent.putExtra("activity","menu");
             context.startActivity(intent);
         });
     }

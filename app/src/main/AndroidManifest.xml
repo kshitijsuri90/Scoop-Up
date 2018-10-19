@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MenuActivity"
+            android:name=".SplashActivity"
             android:theme="@style/NewsCategory">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MenuActivity"
+            android:theme="@style/NewsCategory" />
+        <activity
             android:name=".MainActivity"
-            android:theme="@style/NewsCategory"/>
+            android:theme="@style/NewsCategory" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings_title"
@@ -34,7 +37,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.scoopup.MainActivity" />
         </activity>
-        <activity android:name=".WebActivity"
+        <activity
+            android:name=".WebActivity"
+            android:theme="@style/NewsCategory" />
+        <activity android:name=".ViewPagerActivity"
             android:theme="@style/NewsCategory"/>
     </application>
 

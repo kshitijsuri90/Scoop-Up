@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private ProgressBar progressBar;
     private String title = "The Scoop";
     private Boolean state = Constant.STATE;
+    private String previous_activity = "search";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +80,16 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                     break;
             }
         }
+        if(getIntent().getStringExtra("activity")!=null){
+            previous_activity = "menu";
+        }
         toolbar_bg.setScaleType(ImageView.ScaleType.FIT_XY);
         emptyTextView = findViewById(R.id.fail_text);
         progressBar = findViewById(R.id.loading_spinner);
         TextView title1 = findViewById(R.id.category_title);
         title1.setText(title);
+        ImageButton refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(v -> this.recreate());
         ImageButton back = findViewById(R.id.back_pressed);
         back.setOnClickListener(v -> onBackPressed());
 
@@ -124,7 +130,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                 getString(R.string.settings_category_default));
 
         // parse breaks apart the URI string that's passed into its parameter
-
+        if(previous_activity.equals("menu")){
+            category = Constant.SECTION_QUERY;
+        }
         Uri baseUri = Uri.parse(Constant.REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
@@ -134,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter(Constant.QUERY_PAGES, Constant.NEWS_QUANTITY);
 
         assert category != null;
-        if (!category.equals(getString(R.string.settings_category_default)) || Constant.SECTION_QUERY.equals("highlights")) {
+        if (!category.toLowerCase().equals(getString(R.string.settings_category_default)) || Constant.SECTION_QUERY.equals("highlights")) {
             uriBuilder.appendQueryParameter(Constant.QUERY_FIELDS, category);
             uriBuilder.appendQueryParameter(Constant.QUERY_ORDER_BY, getString(R.string.newest));
         } else {
@@ -148,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             } else {
                 uriBuilder.appendQueryParameter(Constant.SECTION_NAME, Constant.SECTION_QUERY);
                 uriBuilder.appendQueryParameter(Constant.SECTION_ID, Constant.SECTION_QUERY);
-                uriBuilder.appendQueryParameter(Constant.QUERY_FIELDS, Constant.SECTION_QUERY);
+//                uriBuilder.appendQueryParameter(Constant.QUERY_FIELDS, Constant.SECTION_QUERY);
                 uriBuilder.appendQueryParameter(Constant.QUERY_ORDER_BY, getString(R.string.relevance));
             }
 
@@ -184,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_right);
         recyclerView.setLayoutAnimation(controller);
         recyclerView.setAdapter(adapter);
-        if (news.isEmpty()) {
+        if (news==null) {
             recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
         } else {
