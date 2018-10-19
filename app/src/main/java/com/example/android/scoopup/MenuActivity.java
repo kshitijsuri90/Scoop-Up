@@ -1,14 +1,14 @@
 package com.example.android.scoopup;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.ImageView;
+
+import com.example.android.scoopup.adapter.Category_Adapter;
+import com.example.android.scoopup.model.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +37,10 @@ public class MenuActivity extends AppCompatActivity {
 
     }
     private void addData(List<Category> news) {
-        news.add(new Category("HIGHLIGHTS",R.drawable.blue_news));
-        news.add(new Category("POLITICS",R.drawable.pink_news));
-        news.add(new Category("BUSINESS",R.drawable.yellowjpg));
-        news.add(new Category("TRAVEL",R.drawable.light_yellow_news));
+        news.add(new Category(getString(R.string.category1),R.drawable.blue_news));
+        news.add(new Category(getString(R.string.category2),R.drawable.pink_news));
+        news.add(new Category(getString(R.string.category3),R.drawable.yellowjpg));
+        news.add(new Category(getString(R.string.category4),R.drawable.light_yellow_news));
     }
 
 }

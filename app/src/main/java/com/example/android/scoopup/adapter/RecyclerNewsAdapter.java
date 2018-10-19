@@ -1,8 +1,7 @@
-package com.example.android.scoopup;
+package com.example.android.scoopup.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.android.scoopup.model.News;
+import com.example.android.scoopup.R;
+import com.example.android.scoopup.utils.Utils;
+import com.example.android.scoopup.WebActivity;
 
 import java.util.ArrayList;
 
 public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapter.MyViewHolder> {
 
-    private ArrayList<News> news = new ArrayList<>();
+    private ArrayList<News> news;
     private LayoutInflater inflater;
     private Context context;
 
@@ -33,8 +36,7 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         View view =  inflater.inflate(R.layout.news_item_template,parent,false);
-        MyViewHolder holder = new MyViewHolder(view);
-        return holder;
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -47,7 +49,6 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         News current_news = news.get(position);
         holder.setData(current_news,position);
         holder.cardView.setOnClickListener(v -> {
-            String url = news.get(position).getmUrl();
             Intent browser_intent = new Intent(context,WebActivity.class);
             browser_intent.putExtra("url",current_news.getmUrl());
             context.startActivity(browser_intent);
@@ -60,8 +61,6 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         private TextView author;
         private TextView category;
         private TextView date;
-        private int position;
-        private News current_news;
         private CardView cardView;
         private Context context;
 
@@ -82,8 +81,6 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
             this.author.setText(current.getmAuthor());
             this.category.setText(current.getmCategory());
             Glide.with(context).load(current.getThumbnailUrl()).into(image);
-            this.current_news = current;
-            this.position = position;
         }
 
     }

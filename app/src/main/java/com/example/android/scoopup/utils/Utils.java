@@ -1,10 +1,10 @@
-package com.example.android.scoopup;
+package com.example.android.scoopup.utils;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bumptech.glide.request.RequestOptions;
+import com.example.android.scoopup.model.Constant;
+import com.example.android.scoopup.model.News;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,8 +43,7 @@ public class Utils {
             e.printStackTrace();
         }
 
-        ArrayList<News> news = (ArrayList<News>) extractNews(json);
-        return news;
+        return (ArrayList<News>) extractNews(json);
 
     }
 
@@ -69,9 +68,9 @@ public class Utils {
 
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000);
-            urlConnection.setConnectTimeout(15000);
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setReadTimeout(Constant.READ_TIMEOUT);
+            urlConnection.setConnectTimeout(Constant.CONNECTTION_TIMEOUT);
+            urlConnection.setRequestMethod(Constant.REQUEST_METHOD);
             urlConnection.connect();
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
@@ -119,32 +118,32 @@ public class Utils {
 
         try {
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
-            JSONObject response = baseJsonResponse.getJSONObject("response");
-            JSONArray resultsArray = response.getJSONArray("results");
+            JSONObject response = baseJsonResponse.getJSONObject(Constant.RESPONSE);
+            JSONArray resultsArray = response.getJSONArray(Constant.RESULTS);
 
             for (int i = 0; i < resultsArray.length(); i++) {
 
                 JSONObject currentResults = resultsArray.getJSONObject(i);
                 String thumbnail ="";
-                String Title = currentResults.optString("webTitle");
-                String category = currentResults.optString("sectionName");
-                String date = currentResults.optString("webPublicationDate");
-                String url = currentResults.optString("webUrl");
+                String Title = currentResults.optString(Constant.WEB_TITLE);
+                String category = currentResults.optString(Constant.SECTION);
+                String date = currentResults.optString(Constant.WEB_PUBLICATION);
+                String url = currentResults.optString(Constant.WEB_URL);
                 try{
-                    JSONObject fields = currentResults.getJSONObject("fields");
-                    thumbnail = fields.getString("thumbnail");
+                    JSONObject fields = currentResults.getJSONObject(Constant.FIELDS);
+                    thumbnail = fields.getString(Constant.THUMBNAIL);
 
                 }
                 catch (JSONException e){
                     Log.d(TAG, "extractNews: Missing thumbnail");
-                    thumbnail = "http://cosmicshambles.com/wp-content/uploads/2016/12/the-guardian-logo-440x440.png";
+                    thumbnail = Constant.IMAGE;
                 }
 
-                JSONArray tagsauthor = currentResults.getJSONArray("tags");
+                JSONArray tagsauthor = currentResults.getJSONArray(Constant.TAGS);
                 String author = "";
                 if (tagsauthor.length() != 0) {
                     JSONObject currenttagsauthor = tagsauthor.getJSONObject(0);
-                    author = currenttagsauthor.getString("webTitle");
+                    author = currenttagsauthor.getString(Constant.WEB_TITLE);
                 }
                 News news = new News(Title, category, date, url, author,thumbnail);
                 newsList.add(news);

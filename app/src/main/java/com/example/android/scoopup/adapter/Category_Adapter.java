@@ -1,17 +1,19 @@
-package com.example.android.scoopup;
+package com.example.android.scoopup.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.android.scoopup.model.Category;
+import com.example.android.scoopup.MainActivity;
+import com.example.android.scoopup.R;
 
 import java.util.List;
 
@@ -30,21 +32,17 @@ public class Category_Adapter extends RecyclerView.Adapter<Category_Adapter.MyVi
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         View view =  inflater.inflate(R.layout.category_template,parent,false);
-        Category_Adapter.MyViewHolder holder = new Category_Adapter.MyViewHolder(view);
-        return holder;
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         Category current_news = news.get(i);
         myViewHolder.setData(current_news,i);
-        myViewHolder.parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,MainActivity.class);
-                intent.putExtra("section",myViewHolder.title.getText().toString().trim());
-                context.startActivity(intent);
-            }
+        myViewHolder.parent.setOnClickListener(v -> {
+            Intent intent = new Intent(context,MainActivity.class);
+            intent.putExtra("section",myViewHolder.title.getText().toString().trim());
+            context.startActivity(intent);
         });
     }
 

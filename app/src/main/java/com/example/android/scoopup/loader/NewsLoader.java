@@ -1,7 +1,10 @@
-package com.example.android.scoopup;
+package com.example.android.scoopup.loader;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+
+import com.example.android.scoopup.model.News;
+import com.example.android.scoopup.utils.Utils;
 
 import java.util.List;
 
@@ -10,7 +13,7 @@ public class NewsLoader extends AsyncTaskLoader<List<News>> {
     private String url;
 
     //constructor initializing the request URL for the API call
-    NewsLoader(Context context, String url){
+    public NewsLoader(Context context, String url){
         super(context);
         this.url = url;
     }

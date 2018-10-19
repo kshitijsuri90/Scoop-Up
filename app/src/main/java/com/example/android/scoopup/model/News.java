@@ -1,4 +1,4 @@
-package com.example.android.scoopup;
+package com.example.android.scoopup.model;
 
 public class News {
 

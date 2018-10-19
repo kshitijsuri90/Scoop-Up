@@ -27,20 +27,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.scoopup.adapter.RecyclerNewsAdapter;
+import com.example.android.scoopup.loader.NewsLoader;
+import com.example.android.scoopup.model.Constant;
+import com.example.android.scoopup.model.News;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<News>> {
 
-    private static final String QUERY_ORDER_BY = "order-by";
-    private static final String QUERY_FIELDS = "q";
-    public static final String KEY_SHOW_FIELD = "show-fields";
-    public static final String KEY_ALL = "all";
-    private static final String QUERY_PAGES = "page-size";
-    private static String SECTION_QUERY = "def";
-    private static final String SECTION_NAME = "sectionName";
-    private static final String SECTION_ID = "sectionId";
-    private static final int LOADER_ID = 1;
+
     private TextView emptyTextView;
     private ProgressBar progressBar;
     private String title = "The Scoop";
@@ -55,16 +52,15 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("The Scoop");
+        setTitle(getString(R.string.the_daily_scoop));
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        setTitle("");
         ImageView toolbar_bg = findViewById(R.id.toolbar_bg);
         if (getIntent().getStringExtra("section") != null) {
-            SECTION_QUERY = getIntent().getStringExtra("section").trim();
-            title = SECTION_QUERY;
-            SECTION_QUERY = SECTION_QUERY.toLowerCase();
-            switch (SECTION_QUERY) {
+            Constant.SECTION_QUERY = getIntent().getStringExtra("section").trim();
+            title = Constant.SECTION_QUERY;
+            Constant.SECTION_QUERY = Constant.SECTION_QUERY.toLowerCase();
+            switch (Constant.SECTION_QUERY) {
                 case "highlights":
                     toolbar_bg.setImageResource(R.drawable.blue_toolbar);
                     title = "Highlights";
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             // Initialize the loader. Pass in the int ID constant defined above and pass in null for
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
-            loaderManager.initLoader(LOADER_ID, null, this);
+            loaderManager.initLoader(Constant.LOADER_ID, null, this);
         } else
 
         {
@@ -112,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             progressBar.setVisibility(View.GONE);
             // Update empty state with no connection error message
             emptyTextView.setText(R.string.no_internet);
+            updateUi(new ArrayList<>());
         }
 
     }
@@ -127,32 +124,32 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                 getString(R.string.settings_category_default));
 
         // parse breaks apart the URI string that's passed into its parameter
-        String REQUEST_URL = "http://content.guardianapis.com/search?";
-        Uri baseUri = Uri.parse(REQUEST_URL);
+
+        Uri baseUri = Uri.parse(Constant.REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        uriBuilder.appendQueryParameter("api-key", "test");
-        uriBuilder.appendQueryParameter(KEY_SHOW_FIELD, KEY_ALL);
-        uriBuilder.appendQueryParameter("show-tags", "contributor");
-        uriBuilder.appendQueryParameter(QUERY_PAGES, "20");
+        uriBuilder.appendQueryParameter(Constant.API_KEY, Constant.API_KEY_VALUE);
+        uriBuilder.appendQueryParameter(Constant.KEY_SHOW_FIELD, Constant.KEY_ALL);
+        uriBuilder.appendQueryParameter(Constant.SHOW_TAGS, Constant.SHOW_TAGS_VALUE);
+        uriBuilder.appendQueryParameter(Constant.QUERY_PAGES, Constant.NEWS_QUANTITY);
 
         assert category != null;
-        if (!category.equals(getString(R.string.settings_category_default)) || SECTION_QUERY.equals("highlights")) {
-            uriBuilder.appendQueryParameter(QUERY_FIELDS, category);
-            uriBuilder.appendQueryParameter(QUERY_ORDER_BY, getString(R.string.newest));
+        if (!category.equals(getString(R.string.settings_category_default)) || Constant.SECTION_QUERY.equals("highlights")) {
+            uriBuilder.appendQueryParameter(Constant.QUERY_FIELDS, category);
+            uriBuilder.appendQueryParameter(Constant.QUERY_ORDER_BY, getString(R.string.newest));
         } else {
 
-            if (SECTION_QUERY.equals("def")) {
-                uriBuilder.appendQueryParameter(SECTION_NAME, category);
-                uriBuilder.appendQueryParameter(SECTION_ID, category);
-                uriBuilder.appendQueryParameter(QUERY_FIELDS, category);
-                uriBuilder.appendQueryParameter(QUERY_ORDER_BY, getString(R.string.relevance));
+            if (Constant.SECTION_QUERY.equals("def")) {
+                uriBuilder.appendQueryParameter(Constant.SECTION_NAME, category);
+                uriBuilder.appendQueryParameter(Constant.SECTION_ID, category);
+                uriBuilder.appendQueryParameter(Constant.QUERY_FIELDS, category);
+                uriBuilder.appendQueryParameter(Constant.QUERY_ORDER_BY, getString(R.string.relevance));
 
             } else {
-                uriBuilder.appendQueryParameter(SECTION_NAME, SECTION_QUERY);
-                uriBuilder.appendQueryParameter(SECTION_ID, SECTION_QUERY);
-                uriBuilder.appendQueryParameter(QUERY_FIELDS, SECTION_QUERY);
-                uriBuilder.appendQueryParameter(QUERY_ORDER_BY, getString(R.string.relevance));
+                uriBuilder.appendQueryParameter(Constant.SECTION_NAME, Constant.SECTION_QUERY);
+                uriBuilder.appendQueryParameter(Constant.SECTION_ID, Constant.SECTION_QUERY);
+                uriBuilder.appendQueryParameter(Constant.QUERY_FIELDS, Constant.SECTION_QUERY);
+                uriBuilder.appendQueryParameter(Constant.QUERY_ORDER_BY, getString(R.string.relevance));
             }
 
         }
@@ -179,13 +176,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private void updateUi(final ArrayList<News> news) {
         // Find a reference to the {@link ListView} in the layout
         RecyclerView recyclerView = findViewById(R.id.list);
-        if (news.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyTextView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyTextView.setVisibility(View.GONE);
-        }
         RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this, news);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -194,6 +184,13 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_right);
         recyclerView.setLayoutAnimation(controller);
         recyclerView.setAdapter(adapter);
+        if (news.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.GONE);
+        }
 
     }
 

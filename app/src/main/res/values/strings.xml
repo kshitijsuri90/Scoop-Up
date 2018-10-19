@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Scoop Up!</string>
+    <string name="app_name">The Scoop</string>
     <string name="no_search_results">No search results found</string>
     <string name="no_internet">Uh-Oh! Your network is unavailable.</string>
     <string name="no_data">No results found. Please update your search and try again.</string>
@@ -51,5 +51,15 @@
     <string name="night_mode_key" translatable="false">night_mode</string>
     <string name="night_mode_title">Night Mode</string>
     <string name="day_mode_title">Day Mode</string>
+    <string name="category1">HIGHLIGHTS</string>
+    <string name="category2">POLITICS</string>
+    <string name="category3">BUSINESS</string>
+    <string name="category4">TRAVEL</string>
+    <string name="toolbar_background">toolbar_background</string>
+    <string name="highlights_section">highlights</string>
+    <string name="politics_section">politics</string>
+    <string name="business_section">business</string>
+    <string name="travel_section">travel</string>
+
 
 </resources>
